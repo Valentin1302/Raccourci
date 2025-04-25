@@ -1,10 +1,10 @@
 <script setup>
-import HelloWorld from './components/HelloWorld.vue'
-import TheWelcome from './components/TheWelcome.vue'
+
 </script>
 
 <template>
-  <h1>Caca</h1>
+  <h1 class="bg-sky-50">Cacao</h1>
+  
 </template>
 
 <style scoped>
