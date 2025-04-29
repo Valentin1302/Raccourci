@@ -3,7 +3,7 @@
 </script>
 
 <template>
-  <h1 class="bg-sky-50">Cacao</h1>
+  <h1 class="text-4xl font-bold text-blue-600 text-center mt-10">test vue js</h1>
   
 </template>
 
