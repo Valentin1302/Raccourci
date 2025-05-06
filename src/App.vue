@@ -1,20 +1,23 @@
 <script setup>
-
+import NavigationBar from './components/NavigationBar.vue'; 
 </script>
 
 <template>
-  <header class="bg-white shadow-md p-4 mb-4 min-h-16">
+  <div class="min-h-screen flex flex-col">
+    <NavigationBar />
 
-    <nav>
-      <ul class="flex space-x-4">
-        <li><a href="#" class="text-blue-600 hover:underline">Home</a></li>
-        <li><a href="#" class="text-blue-600 hover:underline">About</a></li>
-        <li><a href="#" class="text-blue-600 hover:underline">Contact</a></li>
-      </ul>
-    </nav>
-  </header>
-  <h1 class="text-4xl font-bold text-blue-600 text-center mt-10">test vue js</h1>
+    <main class="flex-grow container mx-auto px-4 py-8">
+      <h1 class="text-4xl font-bold text-blue-600 text-center mb-8">Mon Application Vue.js</h1>
+      <router-view /> 
+    </main>
+
+    <footer class="bg-gray-100 py-4 text-center">
+      <p>© 2025 Mon Application</p>
+    </footer>
+  </div>
 </template>
 
+
 <style scoped>
+
 </style>

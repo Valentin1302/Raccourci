@@ -1,0 +1,38 @@
+<script setup>
+const props = defineProps({
+  link: {
+    type: Object,
+    required: true
+  }
+});
+
+const handleClick = (e) => {
+  e.preventDefault();
+  window.open(props.link.shortUrl, '_blank'); 
+};
+
+const copyLink = () => {
+  navigator.clipboard.writeText(props.link.shortUrl);
+  alert('Lien copié !');
+};
+</script>
+
+<template>
+  <li class="link-item">
+    <div class="link-content">
+      <a :href="link.shortUrl" @click="handleClick">{{ link.shortUrl }}</a>
+      <p class="long-url">{{ link.longUrl }}</p>
+      <div v-if="link.title" class="link-title">{{ link.title }}</div>
+      <div class="link-meta">
+        <span class="link-date">
+          Créé le {{ new Date(link.createdAt).toLocaleDateString() }}
+        </span>
+        <button @click="copyLink">Copier</button>
+      </div>
+    </div>
+  </li>
+</template>
+
+<style scoped>
+/* Ton style ici */
+</style>
