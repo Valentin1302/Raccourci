@@ -13,6 +13,10 @@ const routes = [
     name: 'stats',
     component: StatsView,
   }, 
+  {
+    path: '/:pathMatch(.*)*',
+    redirect: '/'
+  },
 ];
 
 const router = createRouter({
