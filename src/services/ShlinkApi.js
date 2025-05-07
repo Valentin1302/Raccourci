@@ -17,3 +17,16 @@ export const createShortUrl = async (longUrl, options = {}) => {
     }
   });
 };
+
+export async function getShortUrls(page = 1, itemsPerPage = 10) {
+  const response = await fetch(`https://wsf-shlink.nook.sh/rest/v3/short-urls?page=${page}&itemsPerPage=${itemsPerPage}`, {
+    headers: {
+      'X-Api-Key': SHLINK_API_KEY,
+    },
+  });
+
+  if (!response.ok) throw new Error('Erreur de chargement des liens');
+
+  return response.json();
+}
+

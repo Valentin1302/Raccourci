@@ -16,7 +16,7 @@ defineProps({
     <ul>
       <ShortListItem 
         v-for="link in links" 
-        :key="link.id" 
+        :key="link.shortCode" 
         :link="link" 
       />
     </ul>
@@ -29,17 +29,5 @@ defineProps({
 </template>
 
 <style scoped>
-.link-list {
-  margin-top: 2rem;
-}
 
-h2 {
-  margin-bottom: 1rem;
-}
-
-ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
 </style>

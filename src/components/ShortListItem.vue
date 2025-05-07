@@ -25,7 +25,10 @@ const copyLink = () => {
       <div v-if="link.title" class="link-title">{{ link.title }}</div>
       <div class="link-meta">
         <span class="link-date">
-          Créé le {{ new Date(link.createdAt).toLocaleDateString() }}
+          Créé le {{ new Date(link.dateCreated).toLocaleDateString() }}
+        </span>
+        <span>
+          {{ link.visitsCount }} clic{{ link.visitsCount > 1 ? 's' : '' }}
         </span>
         <button @click="copyLink">Copier</button>
       </div>
@@ -34,5 +37,4 @@ const copyLink = () => {
 </template>
 
 <style scoped>
-/* Ton style ici */
 </style>
