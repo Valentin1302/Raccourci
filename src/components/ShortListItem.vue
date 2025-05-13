@@ -34,6 +34,12 @@ const copyLink = () => {
       </div>
     </div>
   </li>
+  <router-link
+      :to="`/visits/${link.shortCode}`"
+      class="ml-4 px-3 py-1 bg-gray-100 hover:bg-gray-200 rounded text-sm"
+    >
+      Voir stats
+    </router-link>
 </template>
 
 <style scoped>

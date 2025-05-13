@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import HomeView from '@/views/HomeView.vue';
 import StatsView from '@/views/StatsView.vue';
+import ShortLinkView from '@/views/ShortLinkView.vue';
 
 const routes = [
   {
@@ -17,6 +18,12 @@ const routes = [
     path: '/:pathMatch(.*)*',
     redirect: '/'
   },
+  {
+    path: '/visits/:shortCode',
+    name: 'visits',
+    component: ShortLinkView,
+    props: true
+  }
 ];
 
 const router = createRouter({
