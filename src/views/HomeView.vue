@@ -3,7 +3,7 @@ import { ref, onMounted, watch } from 'vue';
 import ShortUrlForm from '../components/ShortUrlForm.vue';
 import ShortLinkList from '../components/ShortLinkList.vue';
 import PaginationControls from '../components/PaginationControls.vue';
-import { createShortUrl, getShortUrls } from '../services/ShlinkApi';
+import { createShortUrl, getShortUrls, deleteShortUrl} from '../services/ShlinkApi';
 
 const shortLinks = ref([]);
 const currentPage = ref(1);
@@ -44,6 +44,16 @@ const handleSubmit = async (data) => {
     alert("Échec de création de l'URL. Vérifie que l'URL est correcte et que le slug n’est pas déjà pris.");
   }
 };
+const handleDelete = (shortCode) => {
+  deleteShortUrl(shortCode)
+    .then(() => {
+      fetchLinks()  
+    })
+    .catch((err) => {
+      console.error('Erreur lors de la suppression:', err)  
+    })
+}
+
 </script>
 
 
@@ -51,7 +61,7 @@ const handleSubmit = async (data) => {
   <div class="home-view">
     <h1>Raccourcisseur d'URL</h1>
     <ShortUrlForm @submit="handleSubmit" />
-    <ShortLinkList :links="shortLinks" />
+    <ShortLinkList :links="shortLinks" @delete="handleDelete" />
     <PaginationControls
       :current-page="currentPage"
       :total-items="totalItems"

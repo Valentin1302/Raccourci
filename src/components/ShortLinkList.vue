@@ -8,6 +8,12 @@ defineProps({
     required: true
   }
 });
+
+const emit = defineEmits(['delete'])
+
+const handleDelete = (shortCode) => {
+  emit('delete', shortCode)
+}
 </script>
 
 <template>
@@ -18,6 +24,7 @@ defineProps({
         v-for="link in links" 
         :key="link.shortCode" 
         :link="link" 
+        @delete="handleDelete"
       />
     </ul>
     <PaginationControls 

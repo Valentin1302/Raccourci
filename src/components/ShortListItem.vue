@@ -1,10 +1,14 @@
 <script setup>
+import { defineProps, defineEmits} from 'vue';
+import { deleteShortUrl } from '@/services/ShlinkApi';
 const props = defineProps({
   link: {
     type: Object,
-    required: true
+    required: true,
   }
 });
+
+const emit = defineEmits(['delete'])
 
 const handleClick = (e) => {
   e.preventDefault();
@@ -14,6 +18,10 @@ const handleClick = (e) => {
 const copyLink = () => {
   navigator.clipboard.writeText(props.link.shortUrl);
   alert('Lien copié !');
+};
+
+const handleDelete = () => {
+  emit('delete', props.link.shortCode);
 };
 </script>
 
@@ -40,6 +48,12 @@ const copyLink = () => {
     >
       Voir stats
     </router-link>
+    <button 
+      @click="handleDelete" 
+      class="text-red-600 hover:underline"
+      >
+      Supprimer
+    </button>
 </template>
 
 <style scoped>

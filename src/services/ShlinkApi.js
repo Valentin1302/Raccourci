@@ -36,10 +36,21 @@ export async function getShortUrls(page = 1, itemsPerPage = 10) {
 export const getShortUrlVisits = async (shortCode, params = {}) => {
   return await ofetch(`${BASE_URL}/short-urls/${shortCode}/visits`, {
     method: 'GET',
-    headers: { 'X-Api-Key': SHLINK_API_KEY },
+    headers: { 
+      'X-Api-Key': SHLINK_API_KEY 
+    },
     params: {
       page: params.page || 1,
       itemsPerPage: params.itemsPerPage || 100,
+    }
+  })
+}
+
+export const deleteShortUrl = async (shortCode) => {
+  return await ofetch(`${BASE_URL}/short-urls/${shortCode}`, {
+    method: 'DELETE',
+    headers: { 
+      'X-Api-Key': SHLINK_API_KEY 
     }
   })
 }
