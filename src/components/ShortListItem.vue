@@ -1,23 +1,52 @@
 <script setup>
-import { defineProps, defineEmits} from 'vue';
-import { deleteShortUrl } from '@/services/ShlinkApi';
+import { ref } from 'vue';
+import { updateShortUrl } from '@/services/ShlinkApi';
+
 const props = defineProps({
   link: {
     type: Object,
     required: true,
-  }
+  },
+  fetchLinks: {
+    type: Function,
+    required: true,
+  },
 });
 
-const emit = defineEmits(['delete'])
+const emit = defineEmits(['delete', 'updated']);
+
+const isEditing = ref(false);
+const updatedLongUrl = ref(props.link.longUrl);
+const updatedTitle = ref(props.link.title);
 
 const handleClick = (e) => {
   e.preventDefault();
-  window.open(props.link.shortUrl, '_blank'); 
+  window.open(props.link.shortUrl, '_blank');
 };
 
 const copyLink = () => {
   navigator.clipboard.writeText(props.link.shortUrl);
   alert('Lien copié !');
+};
+
+const handleEdit = async () => {
+  try {
+    await updateShortUrl(props.link.shortCode, {
+      longUrl: updatedLongUrl.value,
+      title: updatedTitle.value,
+    });
+
+    emit('updated', {
+      ...props.link,
+      longUrl: updatedLongUrl.value,
+      title: updatedTitle.value,
+    });
+
+    isEditing.value = false;
+  } catch (error) {
+    console.error('Erreur mise à jour:', error);
+    alert('Échec de la mise à jour');
+  }
 };
 
 const handleDelete = () => {
@@ -28,33 +57,29 @@ const handleDelete = () => {
 <template>
   <li class="link-item">
     <div class="link-content">
-      <a :href="link.shortUrl" @click="handleClick">{{ link.shortUrl }}</a>
-      <p class="long-url">{{ link.longUrl }}</p>
-      <div v-if="link.title" class="link-title">{{ link.title }}</div>
+      <a v-if="!isEditing" :href="link.shortUrl" @click="handleClick">{{ link.shortUrl }}</a>
+      <div v-if="isEditing">
+        <input type="text" v-model="updatedLongUrl" />
+        <input type="text" v-model="updatedTitle" />
+        <button @click="handleEdit">Sauvegarder</button>
+        <button @click="isEditing = false">Annuler</button>
+      </div>
+
+      <p v-else>{{ link.longUrl }}</p>
+      <div v-if="link.title">{{ link.title }}</div>
+
       <div class="link-meta">
-        <span class="link-date">
-          Créé le {{ new Date(link.dateCreated).toLocaleDateString() }}
-        </span>
-        <span>
-          {{ link.visitsCount }} clic{{ link.visitsCount > 1 ? 's' : '' }}
-        </span>
+        <span>Créé le {{ new Date(link.dateCreated).toLocaleDateString() }}</span>
+        <span>{{ link.visitsCount }} clic{{ link.visitsCount > 1 ? 's' : '' }}</span>
         <button @click="copyLink">Copier</button>
       </div>
     </div>
-  </li>
-  <router-link
-      :to="`/visits/${link.shortCode}`"
-      class="ml-4 px-3 py-1 bg-gray-100 hover:bg-gray-200 rounded text-sm"
-    >
+    <router-link :to="`/visits/${link.shortCode}`" class="ml-4 px-3 py-1 bg-gray-100 hover:bg-gray-200 rounded text-sm">
       Voir stats
     </router-link>
-    <button 
-      @click="handleDelete" 
-      class="text-red-600 hover:underline"
-      >
-      Supprimer
-    </button>
+    <button @click="handleDelete" class="text-blue-600 hover:underline">Supprimer</button>
+    <button @click="isEditing = true" class="text-red-600 hover:underline">Modifier</button>
+  </li>
 </template>
 
-<style scoped>
-</style>
+<style scoped></style>
