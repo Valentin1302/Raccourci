@@ -3,7 +3,7 @@ import { ref, onMounted, watch } from 'vue';
 import ShortUrlForm from '../components/ShortUrlForm.vue';
 import ShortLinkList from '../components/ShortLinkList.vue';
 import PaginationControls from '../components/PaginationControls.vue';
-import { createShortUrl, getShortUrls, deleteShortUrl} from '../services/ShlinkApi';
+import { createShortUrl, getShortUrls, deleteShortUrl } from '../services/ShlinkApi';
 
 const shortLinks = ref([]);
 const currentPage = ref(1);
@@ -25,43 +25,45 @@ watch(currentPage, fetchLinks);
 
 const handleSubmit = async (data) => {
   try {
-  const response = await createShortUrl(data.longUrl, {
+    await createShortUrl(data.longUrl, {
       title: data.title,
       customSlug: data.customSlug,
-      slugLength: data.slugLength
+      slugLength: data.slugLength,
     });
-
-    const result = {
-      id: Date.now(),
-      shortUrl: response.shortUrl,  
-      longUrl: data.longUrl,
-      title: data.title,
-      createdAt: new Date().toISOString()
-    };
-    await fetchLinks(); 
+    await fetchLinks();
   } catch (error) {
     console.error('Erreur création lien :', error);
-    alert("Échec de création de l'URL. Vérifie que l'URL est correcte et que le slug n’est pas déjà pris.");
+    alert("Échec de création de l'URL.");
   }
 };
-const handleDelete = (shortCode) => {
-  deleteShortUrl(shortCode)
-    .then(() => {
-      fetchLinks()  
-    })
-    .catch((err) => {
-      console.error('Erreur lors de la suppression:', err)  
-    })
-}
 
+const handleDelete = async (shortCode) => {
+  try {
+    await deleteShortUrl(shortCode);
+    await fetchLinks();
+  } catch (err) {
+    console.error('Erreur suppression :', err);
+  }
+};
+
+const handleUpdated = (updatedLink) => {
+  const index = shortLinks.value.findIndex(l => l.shortCode === updatedLink.shortCode);
+  if (index !== -1) {
+    shortLinks.value[index] = updatedLink;
+  }
+};
 </script>
-
 
 <template>
   <div class="home-view">
     <h1>Raccourcisseur d'URL</h1>
     <ShortUrlForm @submit="handleSubmit" />
-    <ShortLinkList :links="shortLinks" @delete="handleDelete" />
+    <ShortLinkList
+      :links="shortLinks"
+      :fetchLinks="fetchLinks"
+      @delete="handleDelete"
+      @updated="handleUpdated"
+    />
     <PaginationControls
       :current-page="currentPage"
       :total-items="totalItems"
