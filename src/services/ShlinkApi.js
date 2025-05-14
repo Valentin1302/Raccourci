@@ -1,3 +1,4 @@
+import { data } from 'autoprefixer';
 import { ofetch } from 'ofetch';
 
 const BASE_URL = import.meta.env.VITE_SHLINK_BASE_URL;
@@ -54,3 +55,17 @@ export const deleteShortUrl = async (shortCode) => {
     }
   })
 }
+
+export const updateShortUrl = async (shortCode, data) => {
+  return await ofetch(`${BASE_URL}/short-urls/${shortCode}`, {
+    method: 'PATCH',
+    headers: {
+      'X-Api-Key': SHLINK_API_KEY,
+      'Content-Type': 'application/json'
+    },
+   body: JSON.stringify({
+      longUrl: data.longUrl,
+      title: data.title,
+    })
+  });
+};

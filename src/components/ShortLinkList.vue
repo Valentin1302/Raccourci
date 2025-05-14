@@ -1,40 +1,37 @@
 <script setup>
 import ShortListItem from './ShortListItem.vue';
-import PaginationControls from './PaginationControls.vue';
 
-defineProps({
+const props = defineProps({
   links: {
     type: Array,
-    required: true
-  }
+    required: true,
+  },
+  fetchLinks: {
+    type: Function,
+    required: true,
+  },
 });
 
-const emit = defineEmits(['delete'])
+const emit = defineEmits(['delete', 'updated']);
 
 const handleDelete = (shortCode) => {
-  emit('delete', shortCode)
-}
+  emit('delete', shortCode);
+};
+
+const handleUpdated = (updatedLink) => {
+  emit('updated', updatedLink);
+};
 </script>
 
 <template>
-  <div class="link-list">
-    <h2>Historique des liens</h2>
-    <ul>
-      <ShortListItem 
-        v-for="link in links" 
-        :key="link.shortCode" 
-        :link="link" 
-        @delete="handleDelete"
-      />
-    </ul>
-    <PaginationControls 
-      v-if="links.length > 10"
-      :current-page="1"
-      :total-pages="Math.ceil(links.length / 10)"
+  <ul>
+    <ShortListItem
+      v-for="link in links"
+      :key="link.shortCode"
+      :link="link"
+      :fetchLinks="fetchLinks"
+      @delete="handleDelete"
+      @updated="handleUpdated"
     />
-  </div>
+  </ul>
 </template>
-
-<style scoped>
-
-</style>
