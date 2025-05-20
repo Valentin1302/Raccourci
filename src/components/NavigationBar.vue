@@ -11,23 +11,15 @@ import { RouterLink } from 'vue-router';
           to="/" 
           class="text-gray-800 hover:text-blue-600 font-medium transition-colors duration-200 py-2 px-1 border-b-2 border-transparent hover:border-blue-600"
         >
-          Shlink Manager
-        </RouterLink>
-      </li>
-      <li>
-        <RouterLink 
-          to="/" 
-          class="text-gray-800 hover:text-blue-600 font-medium transition-colors duration-200 py-2 px-1 border-b-2 border-transparent hover:border-blue-600"
-        >
           Accueil 
         </RouterLink>
       </li>
       <li>
         <RouterLink 
-          to="/stats" 
+          to="/create" 
           class="text-gray-800 hover:text-blue-600 font-medium transition-colors duration-200 py-2 px-1 border-b-2 border-transparent hover:border-blue-600"
         >
-          Statistiques
+          Créer un lien
         </RouterLink>
       </li>
     </ul>

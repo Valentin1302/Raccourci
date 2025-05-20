@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import HomeView from '@/views/HomeView.vue';
 import StatsView from '@/views/StatsView.vue';
+import CreateLinkView from '@/views/CreateLinkView.vue';
 
 const routes = [
   {
@@ -18,7 +19,11 @@ const routes = [
     path: '/:pathMatch(.*)*',
     redirect: '/'
   },
-
+  {
+    path: '/create',
+    name: 'create',
+    component: CreateLinkView,
+  }
 ];
 
 const router = createRouter({
