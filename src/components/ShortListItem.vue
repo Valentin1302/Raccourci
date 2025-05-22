@@ -1,19 +1,31 @@
 <script setup>
 import { ref } from 'vue';
-import { updateShortUrl } from '@/services/ShlinkApi';
+import { updateShortUrlTags } from '@/services/ShlinkApi';
 
 const props = defineProps({
   link: {
     type: Object,
     required: true,
   },
-  fetchLinks: {
+    fetchLinks: {
     type: Function,
     required: true,
   },
 });
+const emit = defineEmits(['updated', 'delete']);
 
-const emit = defineEmits(['delete', 'updated']);
+const removeTag = async (tagToRemove) => {
+  const updatedTags = props.link.tags.filter(tag => tag !== tagToRemove);
+
+  try {
+    await updateShortUrlTags(props.link.shortCode, updatedTags);
+    emit('updated', { ...props.link, tags: updatedTags });
+  } catch (e) {
+    console.error('Erreur suppression du tag', e);
+    alert('Échec suppression tag');
+  }
+};
+
 
 const isEditing = ref(false);
 const updatedLongUrl = ref(props.link.longUrl);
@@ -79,6 +91,12 @@ const handleDelete = () => {
     </router-link>
     <button @click="handleDelete" class="text-blue-600 hover:underline">Supprimer</button>
     <button @click="isEditing = true" class="text-red-600 hover:underline">Modifier</button>
+    <TagBadge
+    v-for="tag in link.tags"
+    :key="tag"
+    :tag="tag"
+    @remove="removeTag"
+    />
   </li>
 </template>
 

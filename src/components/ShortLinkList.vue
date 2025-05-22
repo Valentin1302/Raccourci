@@ -1,5 +1,6 @@
 <script setup>
 import ShortListItem from './ShortListItem.vue';
+import TagManager from './TagManager.vue';
 
 const props = defineProps({
   links: {
@@ -25,13 +26,18 @@ const handleUpdated = (updatedLink) => {
 
 <template>
   <ul>
-    <ShortListItem
-      v-for="link in links"
-      :key="link.shortCode"
-      :link="link"
-      :fetchLinks="fetchLinks"
-      @delete="handleDelete"
-      @updated="handleUpdated"
-    />
+    <li v-for="link in links" :key="link.shortCode">
+      <ShortListItem
+        :link="link"
+        :fetchLinks="fetchLinks"
+        @delete="handleDelete"
+        @updated="handleUpdated"
+      />
+      <TagManager
+        :short-code="link.shortCode"
+        :current-tags="link.tags"
+        @updated="fetchLinks"
+      />
+    </li>
   </ul>
 </template>

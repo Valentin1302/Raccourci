@@ -15,7 +15,8 @@ export const createShortUrl = async (longUrl, options = {}) => {
       longUrl,
       title: options.title || undefined,
       customSlug: options.customSlug || undefined,
-      shortCodeLength: !options.customSlug ? options.slugLength : undefined
+      shortCodeLength: !options.customSlug ? options.slugLength : undefined,
+      tags: options.tags || undefined
     }
   });
 };
@@ -69,3 +70,37 @@ export const updateShortUrl = async (shortCode, data) => {
     })
   });
 };
+
+
+export async function getTags(page = 1, itemsPerPage = 50) {
+  const url = new URL(`${BASE_URL}/tags`)
+  url.searchParams.append('page', page)
+  url.searchParams.append('itemsPerPage', itemsPerPage)
+
+  const response = await fetch(url.toString(), {
+    headers: { 'X-Api-Key': SHLINK_API_KEY }
+  })
+
+  if (!response.ok) throw new Error('Erreur récupération tags')
+
+  return response.json()
+}
+
+
+
+
+export const updateShortUrlTags = async (shortCode, tags) => {
+  return await ofetch(`${BASE_URL}/short-urls/${shortCode}`, {
+    method: 'PATCH',
+    headers: {
+      'X-Api-Key': SHLINK_API_KEY,
+      'Content-Type': 'application/json'
+    },
+    body: {
+      tags
+    }
+  });
+};
+
+
+
