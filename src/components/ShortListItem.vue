@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue';
-import { updateShortUrlTags } from '@/services/ShlinkApi';
+import { updateShortUrlTags, updateShortUrl} from '@/services/ShlinkApi';
 
 const props = defineProps({
   link: {
