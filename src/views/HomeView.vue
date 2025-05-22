@@ -29,6 +29,7 @@ const handleSubmit = async (data) => {
       title: data.title,
       customSlug: data.customSlug,
       slugLength: data.slugLength,
+      tags: ['dev', 'test', 'vue', 'react'],
     });
     await fetchLinks();
   } catch (error) {
