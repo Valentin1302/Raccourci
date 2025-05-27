@@ -58,6 +58,7 @@ const handleUpdated = (updatedLink) => {
 <template>
   <div class="home-view">
     <h1>Raccourcisseur d'URL</h1>
+    <ShortUrlForm @submit="handleSubmit" />
     <ShortLinkList
       :links="shortLinks"
       :fetchLinks="fetchLinks"
