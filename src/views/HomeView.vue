@@ -1,7 +1,8 @@
 <script setup>
 import { ref, onMounted, watch } from 'vue';
 import ShortUrlForm from '../components/ShortUrlForm.vue';
-import ShortLinkList from '../components/ShortLinkList.vue';
+import ShortListItem from '../components/ShortListItem.vue';
+import TagManager from '../components/TagManager.vue';
 import PaginationControls from '../components/PaginationControls.vue';
 import { createShortUrl, getShortUrls, deleteShortUrl } from '../services/ShlinkApi';
 
@@ -58,12 +59,22 @@ const handleUpdated = (updatedLink) => {
 <template>
   <div class="home-view">
     <h1>Raccourcisseur d'URL</h1>
-    <ShortLinkList
-      :links="shortLinks"
-      :fetchLinks="fetchLinks"
-      @delete="handleDelete"
-      @updated="handleUpdated"
-    />
+    <ul>
+      <li v-for="link in shortLinks" :key="link.shortCode">
+        <ShortListItem
+          :link="link"
+          :fetchLinks="fetchLinks"
+          @delete="handleDelete"
+          @updated="handleUpdated"
+        />
+        <TagManager
+          :short-code="link.shortCode"
+          :current-tags="link.tags"
+          @updated="fetchLinks"
+        />
+      </li>
+    </ul>
+
     <PaginationControls
       :current-page="currentPage"
       :total-items="totalItems"
