@@ -45,36 +45,46 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="tag-manager my-4">
-    <label class="block text-sm font-medium text-gray-700 mb-1">Ajouter des tags</label>
+  <div class="space-y-4 m-">
+    <!-- Sélecteur de tags -->
+    <div>
+      <v-select
+        :options="allTags"
+        v-model="selectedTags"
+        multiple
+        :reduce="tag => tag"
+        label="name"
+        placeholder="Ajouter des tags"
+        class="text-sm"
+      />
+    </div>
 
-    <v-select
-      :options="allTags"
-      v-model="selectedTags"
-      multiple
-      :reduce="tag => tag"
-      label="name"
-      placeholder="Sélectionner des tags"
-    />
-
-    <div class="flex flex-wrap gap-2 mt-3">
+    <!-- Tags sélectionnés -->
+    <div class="flex flex-wrap gap-2">
       <span
         v-for="tag in selectedTags"
         :key="tag"
-        class="text-white text-sm px-3 py-1 rounded-full cursor-pointer select-none"
+        class="text-white text-xs px-2 py-1 rounded-full flex items-center gap-1 shadow-sm"
         :style="{ backgroundColor: getTagColor(tag) }"
-        @click="removeTag(tag)"
-        title="Cliquer pour supprimer"
       >
-        {{ tag }} ✕
+        {{ tag }}
+        <button
+          @click="removeTag(tag)"
+          class="ml-1 text-white text-xs hover:opacity-70"
+        >
+          ✕
+        </button>
       </span>
     </div>
 
-    <button
-      class="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition"
-      @click="updateTags"
-    >
-      Sauvegarder
-    </button>
+    <!-- Bouton de sauvegarde -->
+    <div>
+      <button
+        @click="updateTags"
+        class="bg-blue-600 text-white text-xs px-4 py-2 rounded hover:bg-blue-700 transition"
+      >
+        Sauvegarder les tags
+      </button>
+    </div>
   </div>
 </template>

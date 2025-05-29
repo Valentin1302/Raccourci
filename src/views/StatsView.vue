@@ -8,17 +8,17 @@ const visits = ref([])
 const pagination = ref({
   currentPage: 1,
   totalItems: 0,
-  itemsPerPage: 5 
+  itemsPerPage: 5
 })
 
 const fetchVisits = async () => {
-  const response = await getShortUrlVisits(route.params.shortCode, {  
-      page: pagination.value.currentPage,
-      itemsPerPage: pagination.value.itemsPerPage
-    })
-      visits.value = response.visits.data
-      pagination.value.totalItems = response.visits.pagination.totalItems
-      pagination.value.itemsPerPage = response.visits.pagination.itemsPerPage
+  const response = await getShortUrlVisits(route.params.shortCode, {
+    page: pagination.value.currentPage,
+    itemsPerPage: pagination.value.itemsPerPage
+  })
+  visits.value = response.visits.data
+  pagination.value.totalItems = response.visits.pagination.totalItems
+  pagination.value.itemsPerPage = response.visits.pagination.itemsPerPage
 }
 
 const handlePageChange = (page) => {
@@ -30,48 +30,75 @@ onMounted(fetchVisits)
 </script>
 
 <template>
-    
-<header class="mb-8">
-    <h1 class="text-2xl font-bold">Statistiques pour {{ route.params.shortCode }}</h1>
-    <router-link 
-      to="/" 
-      class="text-blue-600 hover:underline text-sm"
-    >
-      ← Retour à la liste
-    </router-link>
-  </header>
-<div class="max-w-2xl mx-auto p-4">
-    <h1 class="text-xl font-bold mb-4">
-      Statistiques pour {{ route.params.shortCode }}
-    </h1>
+  <div class="min-h-screen bg-gray-50 text-gray-800 px-4 py-12">
+    <!-- Header -->
+    <div class="text-center mb-12">
+      <h1 class="text-4xl font-bold tracking-tight text-blue-600">
+        Stats pour <code class="text-gray-700">{{ route.params.shortCode }}</code>
+      </h1>
+      <p class="text-sm text-gray-500 mt-1">
+        Total de visites : <strong>{{ pagination.totalItems }}</strong>
+      </p>
+      <router-link to="/" class="mt-2 inline-block text-blue-500 hover:underline text-sm">
+        ← Retour à la liste
+      </router-link>
+    </div>
 
-    <p class="mb-2">{{ pagination.totalItems }} visites au total</p>
-
-    <ul>
-      <li 
-        v-for="visit in visits" 
-        :key="visit.visitId" 
-        class="mb-2 p-2 border rounded"
+    <!-- Liste des visites -->
+    <div v-if="visits.length" class="space-y-6 max-w-3xl mx-auto relative border-l border-gray-300 pl-6">
+      <div
+        v-for="visit in visits"
+        :key="visit.visitId"
+        class="relative group bg-white border border-gray-200 p-5 rounded-xl shadow-sm hover:shadow-md transition-all"
       >
-        {{ new Date(visit.date).toLocaleString() }}
-      </li>
-    </ul>
+        <!-- Timeline dot -->
+        <span class="absolute -left-[9px] top-5 w-4 h-4 rounded-full bg-blue-500 border-2 border-white"></span>
 
-    <div v-if="pagination.totalItems > pagination.itemsPerPage" class="mt-4 flex gap-2">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-xs text-gray-400 font-mono">
+            {{ new Date(visit.date).toLocaleString() }}
+          </span>
+          <span class="bg-gray-100 text-xs px-2 py-1 rounded-full text-gray-600">
+            {{ visit.country || 'Global' }}
+          </span>
+        </div>
+
+        <p class="text-sm text-gray-700">
+          Visite depuis :
+          <span class="text-blue-500 font-medium">
+            {{ visit.referer || 'accès direct' }}
+          </span>
+        </p>
+
+        <div class="mt-2 text-xs text-gray-500">
+          {{ visit.browser }} · {{ visit.os }} · {{ visit.deviceType }}
+        </div>
+      </div>
+    </div>
+
+    <!-- Aucune visite -->
+    <p v-else class="text-center text-sm text-gray-400 italic mt-12">
+      Aucune visite enregistrée pour ce lien.
+    </p>
+
+    <!-- Pagination -->
+    <div
+      v-if="pagination.totalItems > pagination.itemsPerPage"
+      class="mt-10 flex justify-center gap-2"
+    >
       <button
         v-for="page in Math.ceil(pagination.totalItems / pagination.itemsPerPage)"
         :key="page"
         @click="handlePageChange(page)"
-        :class="{
-          'bg-blue-500 text-white': page === pagination.currentPage,
-          'bg-gray-200': page !== pagination.currentPage
-        }"
-        class="px-3 py-1 rounded"
+        :class="[
+          'px-4 py-2 rounded-md text-sm font-medium transition-all duration-200',
+          page === pagination.currentPage
+            ? 'bg-blue-600 text-white'
+            : 'bg-gray-200 text-gray-800 hover:bg-gray-300'
+        ]"
       >
         {{ page }}
       </button>
     </div>
   </div>
 </template>
-
-

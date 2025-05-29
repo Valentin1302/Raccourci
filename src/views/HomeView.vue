@@ -23,7 +23,6 @@ const fetchLinks = async () => {
 onMounted(fetchLinks);
 watch(currentPage, fetchLinks);
 
-
 const handleDelete = async (shortCode) => {
   try {
     await deleteShortUrl(shortCode);
@@ -39,32 +38,91 @@ const handleUpdated = (updatedLink) => {
     shortLinks.value[index] = updatedLink;
   }
 };
+
+const copyLink = (url) => {
+  navigator.clipboard.writeText(url);
+  alert('Lien copié dans le presse-papier ✨');
+};
 </script>
 
 <template>
-  <div class="home-view">
-    <h1>Raccourcisseur d'URL</h1>
-    <ul>
-      <li v-for="link in shortLinks" :key="link.shortCode">
-        <ShortListItem
-          :link="link"
-          :fetchLinks="fetchLinks"
-          @delete="handleDelete"
-          @updated="handleUpdated"
-        />
-        <TagManager
-          :short-code="link.shortCode"
-          :current-tags="link.tags"
-          @updated="fetchLinks"
-        />
-      </li>
-    </ul>
+  <section class="bg-gray-50 min-h-screen py-12">
+    <!-- Header optionnel -->
+    <div class="text-center mb-10">
+      <h2 class="text-3xl font-bold text-blue-600">Liens Raccourcis</h2>
+      <p class="text-sm text-gray-500">Gérez et suivez vos liens facilement</p>
+    </div>
 
-    <PaginationControls
-      :current-page="currentPage"
-      :total-items="totalItems"
-      :items-per-page="itemsPerPage"
-      @page-changed="currentPage = $event"
-    />
-  </div>
+    <!-- Grille de cartes -->
+    <div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-3 px-4 sm:px-6">
+      <div
+        v-for="link in shortLinks"
+        :key="link.shortCode"
+        class="bg-white rounded-2xl border border-gray-200 shadow-md hover:shadow-lg hover:ring-1 hover:ring-blue-200 transition-all duration-300"
+      >
+        <div class="p-6 space-y-3">
+          <!-- Titre -->
+          <h3 class="text-lg font-semibold text-gray-800 truncate">
+            {{ link.title || 'Sans titre' }}
+          </h3>
+
+          <!-- Lien court -->
+          <a
+            :href="link.shortUrl"
+            target="_blank"
+            class="block text-sm text-blue-600 hover:underline truncate"
+          >
+            {{ link.shortUrl }}
+          </a>
+
+          <!-- Lien long -->
+          <p class="text-xs text-gray-500 truncate">
+            {{ link.longUrl }}
+          </p>
+
+          <!-- Date -->
+          <p class="text-xs text-gray-400">Créé le {{ new Date(link.dateCreated).toLocaleDateString() }}</p>
+
+          <!-- Tags -->
+          <div
+            v-if="link.tags.length"
+            class="flex flex-wrap gap-x-2 gap-y-2 mt-2"
+          >
+            <span
+              v-for="tag in link.tags"
+              :key="tag"
+              class="bg-gray-100 text-xs text-gray-700 px-3 py-1 rounded-full border border-gray-200"
+            >
+              {{ tag }}
+            </span>
+          </div>
+        </div>
+
+        <!-- Actions + TagManager -->
+        <div class="border-t border-gray-100 px-6 py-4 space-y-3">
+          <div class="flex items-center gap-3 text-sm text-gray-500">
+            <button @click="copyLink(link.shortUrl)" class="hover:text-black">📋</button>
+            <button @click="handleDelete(link.shortCode)" class="hover:text-red-500">🗑️</button>
+            <router-link :to="`/visits/${link.shortCode}`" class="hover:text-blue-600">📊</router-link>
+          </div>
+
+          <TagManager
+            :shortCode="link.shortCode"
+            :currentTags="link.tags"
+            @updated="fetchLinks"
+          />
+        </div>
+      </div>
+    </div>
+
+    <!-- Pagination -->
+    <div class="mt-12">
+      <PaginationControls
+        :currentPage="currentPage"
+        :totalItems="totalItems"
+        :itemsPerPage="itemsPerPage"
+        @page-changed="page => currentPage = page"
+      />
+    </div>
+  </section>
 </template>

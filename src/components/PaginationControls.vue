@@ -1,5 +1,6 @@
 <script setup>
 import { computed } from 'vue';
+
 const props = defineProps({
   currentPage: Number,
   totalItems: Number,
@@ -18,14 +19,26 @@ const goToPage = (page) => {
 </script>
 
 <template>
-  <div class="pagination flex justify-center items-center space-x-2 mt-4">
-    <button @click="goToPage(props.currentPage - 1)" :disabled="props.currentPage === 1">Précédent</button>
-    
-    <span>Page {{ props.currentPage }} sur {{ totalPages }}</span>
-    
-    <button @click="goToPage(props.currentPage + 1)" :disabled="props.currentPage === totalPages">Suivant</button>
+  <div class="flex justify-center items-center gap-4 mt-10">
+    <button
+      @click="goToPage(props.currentPage - 1)"
+      :disabled="props.currentPage === 1"
+      class="px-4 py-2 rounded-md border border-gray-300 bg-white text-sm font-medium hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed transition"
+    >
+      ← Précédent
+    </button>
+
+    <span class="text-sm text-gray-700">
+      Page <span class="font-semibold">{{ props.currentPage }}</span>
+      sur <span class="font-semibold">{{ totalPages }}</span>
+    </span>
+
+    <button
+      @click="goToPage(props.currentPage + 1)"
+      :disabled="props.currentPage === totalPages"
+      class="px-4 py-2 rounded-md border border-gray-300 bg-white text-sm font-medium hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed transition"
+    >
+      Suivant →
+    </button>
   </div>
 </template>
-
-<style scoped>
-</style>
