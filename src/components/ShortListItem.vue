@@ -82,7 +82,6 @@ const handleDelete = () => {
 
       <div class="link-meta">
         <span>Créé le {{ new Date(link.dateCreated).toLocaleDateString() }}</span>
-        <span>{{ link.visitsCount }} clic{{ link.visitsCount > 1 ? 's' : '' }}</span>
         <button @click="copyLink">Copier</button>
       </div>
     </div>

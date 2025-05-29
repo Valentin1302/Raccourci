@@ -1,10 +1,9 @@
 <script setup>
 import { ref, onMounted, watch } from 'vue';
-import ShortUrlForm from '../components/ShortUrlForm.vue';
 import ShortListItem from '../components/ShortListItem.vue';
 import TagManager from '../components/TagManager.vue';
 import PaginationControls from '../components/PaginationControls.vue';
-import { createShortUrl, getShortUrls, deleteShortUrl } from '../services/ShlinkApi';
+import { getShortUrls, deleteShortUrl } from '../services/ShlinkApi';
 
 const shortLinks = ref([]);
 const currentPage = ref(1);
@@ -24,20 +23,6 @@ const fetchLinks = async () => {
 onMounted(fetchLinks);
 watch(currentPage, fetchLinks);
 
-const handleSubmit = async (data) => {
-  try {
-    await createShortUrl(data.longUrl, {
-      title: data.title,
-      customSlug: data.customSlug,
-      slugLength: data.slugLength,
-      tags: ['dev', 'test', 'vue', 'react'],
-    });
-    await fetchLinks();
-  } catch (error) {
-    console.error('Erreur création lien :', error);
-    alert("Échec de création de l'URL.");
-  }
-};
 
 const handleDelete = async (shortCode) => {
   try {
